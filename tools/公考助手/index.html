@@ -163,7 +163,7 @@
     <div class="config-panel">
         <span style="font-weight:bold; flex-shrink:0;">&#33258;&#23450;&#20041;&#25773;&#25253;&#65306;</span>
         <div id="reminders-container" style="display:flex; gap:12px; align-items:center; flex-wrap:nowrap;"></div>
-        <button class="add-reminder-btn" onclick="addReminder()">+ &#28155;&#21152;</button></button>
+        <button class="add-reminder-btn" onclick="addReminder()">+ &#28155;&#21152;</button>
         <button class="edit-btn" onclick="openEditor()">&#9998; &#32534;&#36753;&#31185;&#30446;</button>
     </div>
 </header>
@@ -171,7 +171,7 @@
 <main>
     <div class="hero-title" id="hero-title">全真模拟与效能核算</div>
 
-    <div class="grid-container" id="modules-container"></div></div>
+    <div class="grid-container" id="modules-container"></div>
 
     <div class="action-footer">
         <button class="btn-huge" onclick="resetForm()">清空</button>
@@ -349,7 +349,7 @@ function renderTime() {
 
 function startTimer() { if(!active){ active=true; timer=setInterval(renderTime, 1000); say('开始模拟'); } }
 function pauseTimer() { clearInterval(timer); active=false; }
-function resetTimer() { pauseTimer(); sec=0; document.getElementById('timer').innerText='00:00'; }
+function resetTimer() { pauseTimer(); sec=0; document.getElementById('timer').innerText='00:00:00'; }
 
 function calcScore() {
     var total = 0;
@@ -431,6 +431,8 @@ function saveEditor() {
     closeEditor();
 }
 
+
+
 /* === Double-click Title Edit === */
 function setupTitleEdit() {
     var el = document.getElementById('hero-title');
@@ -461,6 +463,7 @@ function finishEdit(input, el) {
     el.style.display = '';
     input.remove();
 }
+
 /* === Init === */
 
 loadConfig();
@@ -468,7 +471,6 @@ loadReminders();
 renderTitle();
 renderModules();
 renderReminders();
-setupTitleEdit();
 </script>
 
 
