@@ -340,8 +340,10 @@ function hpaste(){setTimeout(()=>{const f=hi.value.replace(/\r?\n/g,'');hi.value
 function clearAll(){if(text.length>0&&!confirm('确定要清空所有内容吗？'))return;text='';cp=0;ss=null;hi.value='';hist=[{text:'',cursor:0}];hix=0;uur();r();as();hi.focus();tst('已清空');}
 function et(){if(!text){tst('没有内容可导出');return;}const b=new Blob([text],{type:'text/plain;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;const n=new Date(),tsf=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');a.download='申论_'+tsf+'.txt';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);tst('已导出');}
 function hp2(){window.print();}
-function as(){try{localStorage.setItem(SK,text);localStorage.setItem(TK,ts.value);si.textContent='已自动保存';si.classList.add('saved');clearTimeout(as._t);as._t=setTimeout(()=>{si.classList.remove('saved');si.textContent='';},2000);}catch(e){}}
-function ls(){try{const s=localStorage.getItem(SK);if(s){text=s;cp=text.length;hi.value=text;hist=[{text,cursor:cp}];hix=0;uur();}const st=localStorage.getItem(TK);if(st&&ts.querySelector('option[value="'+st+'"]'))ts.value=st;}catch(e){}}
+function as(){try{localStorage.setItem(SK,text);localStorage.setItem(TK,ts.value);if(window.SyncStore){window.SyncStore.writeData(SK,text);window.SyncStore.writeData(TK,ts.value);}si.textContent='已自动保存';si.classList.add('saved');clearTimeout(as._t);as._t=setTimeout(()=>{si.classList.remove('saved');si.textContent='';},2000);}catch(e){}}
+function ls(){try{const s=localStorage.getItem(SK);if(s){text=s;cp=text.length;hi.value=text;hist=[{text,cursor:cp}];hix=0;uur();}const st=localStorage.getItem(TK);if(st&&ts.querySelector('option[value="'+st+'"]'))ts.value=st;}catch(e){}
+  // Cloud sync
+  if(window.SyncStore&&window.SyncStore.isConfigured()){window.SyncStore.readData(SK,function(cd){if(cd&&cd!==text&&text.length===0){text=cd;cp=text.length;hi.value=text;hist=[{text,cursor:cp}];hix=0;uur();r();}});}}
 let tstt;function tst(m){te.textContent=m;te.classList.add('show');clearTimeout(tstt);tstt=setTimeout(()=>te.classList.remove('show'),2000);}
 function ttk(){if(!trun)return;if(tsec<=0){trun=false;ttb.innerHTML='&#x25B6;';clearInterval(tint);tint=null;td.textContent='00:00';td.classList.add('warning');tst('时间到！');return;}tsec--;utd();}
 function utd(){const m=Math.floor(tsec/60),s=tsec%60;td.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');if(tsec<=60)td.classList.add('warning');else td.classList.remove('warning');}
@@ -386,5 +388,6 @@ document.querySelectorAll('.template-item[data-tpl]').forEach(el=>{el.addEventLi
 
 })();
 </script>
+<script src="../公考工具箱/assets/js/sync.js"></script>
 </body>
 </html>

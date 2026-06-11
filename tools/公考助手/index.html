@@ -243,6 +243,7 @@ function loadConfig() {
 
 function saveConfig() {
     localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+    if (window.SyncStore) window.SyncStore.writeData(CONFIG_KEY, config);
 }
 
 function loadReminders() {
@@ -255,6 +256,7 @@ function loadReminders() {
 
 function saveReminders() {
     localStorage.setItem(REMINDER_KEY, JSON.stringify(reminders));
+    if (window.SyncStore) window.SyncStore.writeData(REMINDER_KEY, reminders);
 }
 
 /* === Renderers === */
@@ -429,7 +431,38 @@ function saveEditor() {
     closeEditor();
 }
 
-/* === Init === */
+/* === Double-click Title Edit === */
+function setupTitleEdit() {
+    var el = document.getElementById('hero-title');
+    if (!el) return;
+    el.style.cursor = 'text';
+    el.title = '双击编辑标题';
+    el.addEventListener('dblclick', function() {
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.value = config.title;
+        input.style.cssText = 'font-size:clamp(1.8rem,4vw,3.5rem);font-weight:900;text-align:center;background:transparent;border:none;border-bottom:2px solid #4f46e5;outline:none;font-family:inherit;width:80%;display:block;margin:0 auto;color:inherit;';
+        el.style.display = 'none';
+        el.parentNode.insertBefore(input, el);
+        input.focus();
+        input.select();
+        input.addEventListener('blur', function() { finishEdit(input, el); });
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { input.blur(); }
+            if (e.key === 'Escape') { el.style.display = ''; input.remove(); }
+        });
+    });
+}
+function finishEdit(input, el) {
+    var val = input.value.trim() || '全真模拟';
+    config.title = val;
+    saveConfig();
+    el.textContent = val;
+    el.style.display = '';
+    input.remove();
+}
+
+/* === Init ===
 
 loadConfig();
 loadReminders();
@@ -463,5 +496,6 @@ renderReminders();
     </div>
 </div>
 
+<script src="../公考工具箱/assets/js/sync.js"></script>
 </body>
 </html>

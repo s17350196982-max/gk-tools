@@ -15,8 +15,22 @@ function loadEntries() {
     return data;
   } catch { return []; }
 }
+
+/* Async cloud sync: tries to pull from Supabase on init */
+function cloudSync() {
+  if (window.SyncStore && window.SyncStore.isConfigured()) {
+    window.SyncStore.readData(STORAGE_KEY, function(cloudData) {
+      if (cloudData && Array.isArray(cloudData) && cloudData.length > 0) {
+        cloudData.forEach(migrateEntry);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cloudData));
+        renderAll();
+      }
+    });
+  }
+}
 function saveEntries(entries) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  if (window.SyncStore) window.SyncStore.writeData(STORAGE_KEY, entries);
 }
 function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -575,6 +589,7 @@ function setupUndo() {
    ========================================================= */
 document.addEventListener('DOMContentLoaded', function () {
   renderAll();
+  cloudSync();
   setupForm();
   setupReviewClicks();
   setupHistoryClicks();
