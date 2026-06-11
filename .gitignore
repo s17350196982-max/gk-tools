@@ -1,0 +1,11 @@
+﻿# OS files
+Thumbs.db
+.DS_Store
+
+# Editor temp files
+*.bak
+*.bak2
+DELME
+
+# Temp files
+temp_*.html
