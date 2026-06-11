@@ -293,8 +293,8 @@ function renderReminders() {
             '<input type="number" class="reminder-time" value="' + r.time + '" min="0" max="999" data-id="' + r.id + '">' +
             '<span class="reminder-sep">分</span>' +
             '<input type="text" class="reminder-msg" value="' + r.message.replace(/"/g,'&quot;') + '" placeholder="播报内容..." data-id="' + r.id + '">' +
-            '<button class="test-btn" onclick="testReminder(\' + r.id + \')">试听</button>' +
-            '<button class="del-btn" onclick="removeReminder(\' + r.id + \')" title="删除">✕</button>';
+            '<button class="test-btn" data-id="' + r.id + '">试听</button>' +
+            '<button class="del-btn" data-id="' + r.id + '" title="删除">✕</button>';
         c.appendChild(div);
     });
     c.querySelectorAll('.reminder-time').forEach(function(inp) {
@@ -347,9 +347,9 @@ function renderTime() {
     });
 }
 
-function startTimer() { if(!active){ active=true; timer=setInterval(renderTime, 1000); say('开始模拟'); } }
-function pauseTimer() { clearInterval(timer); active=false; }
-function resetTimer() { pauseTimer(); sec=0; document.getElementById('timer').innerText='00:00:00'; }
+function startTimer() { if(!active){ active=true; timer=setInterval(renderTime, 1000); say('开始模拟'); document.getElementById('btn-start').style.background='#10b981'; document.getElementById('btn-start').textContent='计时中'; } }
+function pauseTimer() { clearInterval(timer); active=false; document.getElementById('btn-start').style.background='var(--accent)'; document.getElementById('btn-start').textContent='继续'; }
+function resetTimer() { pauseTimer(); sec=0; document.getElementById('timer').innerText='00:00:00'; document.getElementById('btn-start').style.background='var(--accent)'; document.getElementById('btn-start').textContent='开始计时'; }
 
 function calcScore() {
     var total = 0;
@@ -432,6 +432,22 @@ function saveEditor() {
 }
 
 
+
+
+/* === Event delegation === */
+document.addEventListener('click', function(e) {
+    var target = e.target;
+    if (target.classList.contains('del-btn')) {
+        var id = target.getAttribute('data-id');
+        if (id) { reminders = reminders.filter(function(r) { return r.id !== id; }); saveReminders(); renderReminders(); }
+        e.preventDefault();
+    }
+    if (target.classList.contains('test-btn')) {
+        var id = target.getAttribute('data-id');
+        if (id) { var r = reminders.find(function(x) { return x.id === id; }); if (r && r.message) say(r.message); }
+        e.preventDefault();
+    }
+});
 
 /* === Double-click Title Edit === */
 function setupTitleEdit() {
