@@ -9,3 +9,7 @@ DELME
 
 # Temp files
 temp_*.html
+# Project specific
+*.bat
+!deploy.bat
+启动公考工具箱.bat

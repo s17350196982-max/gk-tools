@@ -1,10 +1,10 @@
-(function () {
+﻿(function () {
   'use strict';
   var TOOLS = {
     dashboard: { name: '首页', path: null },
-    exam:      { name: '公考助手',   path: '../省考助手.html' },
+    exam:      { name: '公考助手',   path: '../公考助手/index.html' },
     essay:     { name: '申论方格纸', path: '../申论方格纸/index.html' },
-    speed:     { name: '资料速算',   path: '../资料训练/资料训练.html' },
+    speed:     { name: '资料速算',   path: '../资料训练/index.html' },
     curve:     { name: '遗忘曲线',   path: '../遗忘曲线/index.html' }
   };
   var currentView = 'dashboard';
